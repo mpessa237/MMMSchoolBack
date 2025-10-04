@@ -5,6 +5,7 @@ import com.example.MMMSchoolBack.dto.ClasseRespDTO;
 import com.example.MMMSchoolBack.mapper.ClasseMapper;
 import com.example.MMMSchoolBack.models.Classe;
 import com.example.MMMSchoolBack.repositories.ClasseRepo;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class ClasseService {
 
     private final ClasseRepo classeRepo;
     private final ClasseMapper classeMapper;
+    //gestionnaire des entitees
+    private final EntityManager entityManager;
 
     public ClasseRespDTO creerClasse(ClasseReqDTO classeDTO){
         Classe classe = classeMapper.toEntity(classeDTO);
@@ -60,11 +63,33 @@ public class ClasseService {
         return this.classeRepo.saveAndFlush(classeOptional.get());
     }
 
-    public void  delete(Long classeId){
 
-        classeRepo.findById(classeId)
-                .orElseThrow(()-> new EntityNotFoundException("class not found!"));
-        classeRepo.deleteById(classeId);
+    //desactive une classe(soft delete)
+    @Transactional
+    public void softDeleteClasse(Long classeId){
+        Classe classe = classeRepo.findInactiveById(classeId)
+                .orElseThrow(()->new NoSuchElementException("classe active non trouvee avec ID:" + classeId));
+
+        if (!classe.isActive()) {
+            return;
+        }
+
+        classe.setActive(false);
+        classeRepo.save(classe);
+
+    }
+
+    //reactiver une classe
+    @Transactional
+    public void reactiveClasse(Long classeId){
+        Classe classe = classeRepo.findInactiveById(classeId)
+                .orElseThrow(()->new NoSuchElementException("classe desactivee non trouvee avec ID:" +classeId));
+
+        if (classe.isActive()){
+            throw new IllegalStateException("la classe avec ID" + classeId + "est deja active");
+        }
+        classe.setActive(true);
+        classeRepo.save(classe);
     }
 
 }

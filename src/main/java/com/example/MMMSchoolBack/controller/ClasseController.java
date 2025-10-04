@@ -55,10 +55,32 @@ public class ClasseController {
     }
 
     @DeleteMapping("/{classeId}")
-    public ResponseEntity<String> delete(@PathVariable Long classeId){
-
-        classeService.delete(classeId);
-        return ResponseEntity.ok("class deleted successfully!!");
+    public ResponseEntity<Void> softDelete(@PathVariable Long classeId){
+        try {
+            classeService.softDeleteClasse(classeId);
+            return ResponseEntity.notFound().build();
+        }
+        catch (NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+    @PutMapping("/{classeId}/reactivate")
+    public ResponseEntity<Void> reactivateClasse(@PathVariable Long classeId) {
+        try {
+            classeService.reactiveClasse(classeId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "active = true")
 @Entity
 @Table(name = "classes")
 public class Classe {
@@ -21,6 +23,9 @@ public class Classe {
     private String nom;
     @Enumerated(EnumType.STRING)
     private Cycle cycle;
+
+    // pour le soft delete
+    private boolean active = true;
 
     @OneToMany(mappedBy = "classe",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Eleve> eleves = new ArrayList<>();
