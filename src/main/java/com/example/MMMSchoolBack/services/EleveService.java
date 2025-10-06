@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.time.Year;
 import java.util.List;
@@ -57,13 +58,24 @@ public class EleveService {
         return eleveMapper.toDto(savedEleve);
     }
 
-    private String generateUniqueMatricule() {
+    @Transactional
+    public synchronized String generateUniqueMatricule() {
 
         String annee = String.valueOf(Year.now());
-        long nextId = matriculeCounter.incrementAndGet();
-        String numeroSequence = String.format("%04d", nextId);
+
+        // 1. Récupérer le dernier numéro de séquence pour l'année en cours
+        Integer lastSequence = eleveRepo.findLastSequenceNumberByAnnee(annee);
+
+        // 2. Calculer le prochain ID : si le résultat est null (nouvelle année ou première entrée), on commence à 1.
+        long nextId = (lastSequence != null ? lastSequence.longValue() : 0) + 1;
+
+        // 3. Formatter le numéro séquentiel
+        String numeroSequence = String.format("%04d", nextId); // Ex: 0001, 0010, 0123
+
+        // 4. Combiner et retourner
         return annee + "-" + numeroSequence;
     }
+
 
     public EleveRespDTO findEleveByNom(String nom){
         Eleve eleve = eleveRepo.findEleveByNom(nom)
@@ -81,6 +93,49 @@ public class EleveService {
                 .collect(Collectors.toList());
     }
 
+    public Eleve updateEleve(Eleve eleve,Long eleveId){
+
+        Optional<Eleve> eleveOptional = eleveRepo.findById(eleveId);
+
+        if (eleveOptional.isEmpty())
+            throw new EntityNotFoundException("student not found!!");
+        if (eleve.getNom()!=null)
+            eleveOptional.get().setNom(eleve.getNom());
+        if (eleve.getPrenom()!=null)
+            eleveOptional.get().setPrenom(eleve.getPrenom());
+        if (eleve.getDateDeNaissance()!=null)
+            eleveOptional.get().setDateDeNaissance(eleve.getDateDeNaissance());
+        if (eleve.getGenre()!=null)
+            eleveOptional.get().setGenre(eleve.getGenre());
+
+        return this.eleveRepo.saveAndFlush(eleveOptional.get());
+
+    }
+
+    @Transactional
+    public void softDeleteEleve(Long eleveId){
+        Eleve eleve = eleveRepo.findInactiveEleveById(eleveId)
+                .orElseThrow(()-> new NoSuchElementException("eleve actif non trouve avec cet ID:" +eleveId));
+
+        if (!eleve.isActive()){
+            return;
+        }
+
+        eleve.setActive(false);
+        eleveRepo.save(eleve);
+    }
+
+    @Transactional
+    public void reactive(Long eleveId){
+        Eleve eleve = eleveRepo.findInactiveEleveById(eleveId)
+                .orElseThrow(()-> new NoSuchElementException("classe desactivee non trouvee avec ID:" +eleveId));
+        if (eleve.isActive()){
+            return;
+        }
+
+        eleve.setActive(true);
+        eleveRepo.save(eleve);
+    }
 
 
 

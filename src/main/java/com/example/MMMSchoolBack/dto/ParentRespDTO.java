@@ -18,5 +18,5 @@ public class ParentRespDTO {
     private String adresse;
     private String profession;
 
-    List<EleveReqDTO> eleveReqDTOS;
+    List<EleveSimpleDTO> eleves;
 }

@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +15,29 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
 
     public static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutes
-    public static final long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 7;
+    public static final long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30;
 
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
+
+
+    public String generateAccessToken(UserDetails userDetails){
+        String roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        HashMap<String ,Object> claims = new HashMap<>();
+        claims.put("roles",roles);
+
+        return generateToken(claims,userDetails,ACCESS_TOKEN_EXPIRATION);
+    }
 
 
     public String extractUsername(String token){
@@ -35,9 +49,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateAccessToken(UserDetails userDetails){
-        return generateToken(new HashMap<String,Object>(),userDetails,ACCESS_TOKEN_EXPIRATION);
-    }
 
     public String generateRefreshToken(UserDetails userDetails){
         return generateToken(new HashMap<String,Object>(),userDetails,REFRESH_TOKEN_EXPIRATION);
@@ -69,7 +80,7 @@ public class JwtService {
         return extractClaim(token,Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())

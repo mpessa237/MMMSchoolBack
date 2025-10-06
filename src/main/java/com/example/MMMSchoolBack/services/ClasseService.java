@@ -48,6 +48,12 @@ public class ClasseService {
         return classeMapper.toDto(classe);
     }
 
+    public ClasseRespDTO getClasseByNom(String nom){
+        Classe classe = classeRepo.findByNom(nom)
+                .orElseThrow(()-> new EntityNotFoundException("class not found!!"));
+        return classeMapper.toDto(classe);
+    }
+
 
     public Classe updateClasse(Classe classe,Long classeId){
 

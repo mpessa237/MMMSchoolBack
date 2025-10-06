@@ -7,6 +7,7 @@ import com.example.MMMSchoolBack.services.ClasseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,18 +20,27 @@ public class ClasseController {
 
     private final ClasseService classeService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<ClasseRespDTO> saveClasse(@RequestBody ClasseReqDTO classeDTO){
         ClasseRespDTO createClasse = classeService.creerClasse(classeDTO);
         return new ResponseEntity<>(createClasse, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ClasseRespDTO>> getAllClasses(){
         List<ClasseRespDTO> classes = classeService.getAllClasses();
         return ResponseEntity.ok(classes);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/nom/{nom}")
+    public ResponseEntity<ClasseRespDTO> getClasseByNom(@PathVariable String nom){
+        return ResponseEntity.ok(this.classeService.getClasseByNom(nom));
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{classeId}")
     public ResponseEntity<ClasseRespDTO> getClasse(@PathVariable Long classeId) {
         try {
@@ -41,6 +51,7 @@ public class ClasseController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{classeId}")
     public ResponseEntity<Classe> updateClasse(@RequestBody Classe classe,@PathVariable Long classeId){
         classe.setClasseId(classeId);
@@ -54,6 +65,7 @@ public class ClasseController {
         return ResponseEntity.ok(updateClasse);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{classeId}")
     public ResponseEntity<Void> softDelete(@PathVariable Long classeId){
         try {
@@ -68,6 +80,7 @@ public class ClasseController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{classeId}/reactivate")
     public ResponseEntity<Void> reactivateClasse(@PathVariable Long classeId) {
         try {
