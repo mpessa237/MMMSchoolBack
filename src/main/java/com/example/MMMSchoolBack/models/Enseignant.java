@@ -22,7 +22,6 @@ public class Enseignant {
     private String nom;
     private String prenom;
     private String adresse;
-    private String specialite;
     private String telephone;
 
     @OneToMany(mappedBy = "enseignant",cascade = CascadeType.ALL,orphanRemoval = true)

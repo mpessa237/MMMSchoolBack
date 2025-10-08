@@ -5,8 +5,6 @@ import com.example.MMMSchoolBack.dto.EleveRespDTO;
 import com.example.MMMSchoolBack.dto.EleveSimpleDTO;
 import com.example.MMMSchoolBack.models.Eleve;
 import com.example.MMMSchoolBack.models.Genre;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component

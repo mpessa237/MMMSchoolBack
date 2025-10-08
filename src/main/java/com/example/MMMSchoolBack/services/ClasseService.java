@@ -55,18 +55,27 @@ public class ClasseService {
     }
 
 
-    public Classe updateClasse(Classe classe,Long classeId){
+    public ClasseRespDTO updateClasse(Classe classe,Long classeId){
 
         Optional<Classe> classeOptional = classeRepo.findById(classeId);
 
-        if (classeOptional.isEmpty())
-            throw new EntityNotFoundException("classe not found!!");
-        if (classe.getNom()!=null)
-            classeOptional.get().setNom(classe.getNom());
-        if (classe.getCycle()!=null)
-            classeOptional.get().setCycle(classe.getCycle());
+        if (classeOptional.isEmpty()) {
+            throw new EntityNotFoundException("classe not found with ID:!!" + classeId);
+        }
 
-        return this.classeRepo.saveAndFlush(classeOptional.get());
+        Classe classeToUpdate = classeOptional.get();
+
+        if (classe.getNom() != null) {
+            classeToUpdate.setNom(classe.getNom());
+        }
+        if (classe.getCycle() != null) {
+            classeToUpdate.setCycle(classe.getCycle());
+        }
+
+        Classe updatedClasseEntity = this.classeRepo.saveAndFlush(classeToUpdate);
+
+        return classeMapper.toDto(updatedClasseEntity);
+
     }
 
 

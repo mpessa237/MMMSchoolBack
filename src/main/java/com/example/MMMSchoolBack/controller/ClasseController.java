@@ -2,6 +2,7 @@ package com.example.MMMSchoolBack.controller;
 
 import com.example.MMMSchoolBack.dto.ClasseReqDTO;
 import com.example.MMMSchoolBack.dto.ClasseRespDTO;
+import com.example.MMMSchoolBack.mapper.ClasseMapper;
 import com.example.MMMSchoolBack.models.Classe;
 import com.example.MMMSchoolBack.services.ClasseService;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,11 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/classes")
+@CrossOrigin(origins = "http://localhost:4200") // 🔑 Autorise les requêtes depuis votre front-end Angular
 public class ClasseController {
 
     private final ClasseService classeService;
+    private final ClasseMapper classeMapper;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
@@ -53,16 +56,11 @@ public class ClasseController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{classeId}")
-    public ResponseEntity<Classe> updateClasse(@RequestBody Classe classe,@PathVariable Long classeId){
-        classe.setClasseId(classeId);
-        Classe updateClasse = classeService.updateClasse(classe, classeId);
+    public ResponseEntity<ClasseRespDTO> updateClasse(@RequestBody ClasseReqDTO  classeReqDTO,@PathVariable Long classeId){
+        Classe classeEntity = classeMapper.toEntity(classeReqDTO);
 
-        if (
-                updateClasse==null
-        ){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updateClasse);
+        ClasseRespDTO classeRespDTO = classeService.updateClasse(classeEntity,classeId);
+        return ResponseEntity.ok(classeRespDTO);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

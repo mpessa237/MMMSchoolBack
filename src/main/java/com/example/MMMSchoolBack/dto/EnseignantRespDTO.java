@@ -1,6 +1,5 @@
 package com.example.MMMSchoolBack.dto;
 
-import com.example.MMMSchoolBack.models.Cycle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +9,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClasseRespDTO {
-    private Long classeId;
+public class EnseignantRespDTO {
+    private Long enseignantId;
     private String nom;
-    private Cycle cycle;
+    private String prenom;
+    private String adresse;
+    private String telephone;
 
-    private boolean active;
-
-    private List<EleveSimpleDTO> eleves;
+    List<CourRespDTO> cours;
 }

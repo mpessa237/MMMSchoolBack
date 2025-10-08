@@ -1,6 +1,5 @@
 package com.example.MMMSchoolBack.dto;
 
-import com.example.MMMSchoolBack.models.Cycle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClasseReqDTO {
+public class CourReqDTO {
     private String nom;
-    private Cycle cycle;
+    private Double coefficient;
 
 
 }
