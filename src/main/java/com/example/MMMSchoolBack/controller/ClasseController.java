@@ -45,7 +45,7 @@ public class ClasseController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{classeId}")
-    public ResponseEntity<ClasseRespDTO> getClasse(@PathVariable Long classeId) {
+    public ResponseEntity<ClasseRespDTO> getClasseById(@PathVariable Long classeId) {
         try {
             ClasseRespDTO classe = classeService.getClasseById(classeId);
             return ResponseEntity.ok(classe);
@@ -55,7 +55,7 @@ public class ClasseController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/{classeId}")
+    @PatchMapping("/{classeId}")
     public ResponseEntity<ClasseRespDTO> updateClasse(@RequestBody ClasseReqDTO  classeReqDTO,@PathVariable Long classeId){
         Classe classeEntity = classeMapper.toEntity(classeReqDTO);
 

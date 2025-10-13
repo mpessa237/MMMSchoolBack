@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/classes").hasAuthority("ADMIN")
                         .requestMatchers("/api/cours").hasAuthority("ADMIN")
                         .requestMatchers("/api/enseignants").hasAuthority("ADMIN")
+                        .requestMatchers("/api/notes").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session->session.sessionCreationPolicy(

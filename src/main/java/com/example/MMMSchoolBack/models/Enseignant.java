@@ -24,6 +24,8 @@ public class Enseignant {
     private String adresse;
     private String telephone;
 
+    private boolean active = true;
+
     @OneToMany(mappedBy = "enseignant",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Cour> cours = new ArrayList<>();
 }

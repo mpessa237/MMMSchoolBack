@@ -4,12 +4,22 @@ import com.example.MMMSchoolBack.dto.ParentReqDTO;
 import com.example.MMMSchoolBack.dto.ParentRespDTO;
 import com.example.MMMSchoolBack.models.Parent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 
 @Component
-@RequiredArgsConstructor
+
 public class ParentMapper {
+
+    @Lazy
+    private final EleveMapper eleveMapper;
+
+    public ParentMapper(@Lazy EleveMapper eleveMapper) {
+        this.eleveMapper = eleveMapper;
+    }
 
 
     public Parent toEntity(ParentReqDTO parentReqDTO){
@@ -34,6 +44,15 @@ public class ParentMapper {
         parentRespDTO.setTelephone(parent.getTelephone());
         parentRespDTO.setProfession(parent.getProfession());
 
+        // CORRECTION CRUCIALE : Mappage des élèves
+        if (parent.getEleves() != null) {
+            parentRespDTO.setEleves(
+                    parent.getEleves().stream()
+                            .map(eleveMapper::toSimpleDto) // Suppose que EleveMapper a une méthode toSimpleDto
+                            .collect(Collectors.toList())
+            );
+        }
+
         return parentRespDTO;
     }
 
@@ -46,6 +65,10 @@ public class ParentMapper {
         parentRespDTO.setParentId(parent.getParentId());
         parentRespDTO.setNom(parent.getNom());
         parentRespDTO.setPrenom(parent.getPrenom());
+        parentRespDTO.setEmail(parent.getEmail());
+        parentRespDTO.setAdresse(parent.getAdresse());
+        parentRespDTO.setProfession(parent.getProfession());
+        parentRespDTO.setTelephone(parent.getTelephone());
 
         return parentRespDTO;
     }

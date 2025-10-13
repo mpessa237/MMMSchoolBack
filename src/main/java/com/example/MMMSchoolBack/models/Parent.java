@@ -25,6 +25,8 @@ public class Parent {
     private String profession;
     private String adresse;
 
+    private boolean active = true;
+
     @OneToMany(mappedBy = "parent",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Eleve> eleves = new ArrayList<>();
 }

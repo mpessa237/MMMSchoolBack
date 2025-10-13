@@ -51,7 +51,7 @@ public class EleveController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PutMapping("/{eleveId}")
+    @PatchMapping("/{eleveId}")
     public ResponseEntity<Eleve> update(@RequestBody Eleve eleve,@PathVariable Long eleveId){
         return ResponseEntity.ok(this.eleveService.updateEleve(eleve, eleveId));
     }

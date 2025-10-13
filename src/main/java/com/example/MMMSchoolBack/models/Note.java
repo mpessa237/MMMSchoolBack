@@ -21,4 +21,11 @@ public class Note {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eleve_id")
     private Eleve eleve;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cour_id",nullable = false)
+    private Cour cour;
+
+
+
 }

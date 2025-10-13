@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourReqDTO {
-    private String nom;
-    private Double coefficient;
+public class NoteReqDTO {
 
-    private List<Long> classeIds;
+
+    private Double valeur;
+    private String appreciation;
+
+    private Long eleveId;
+    private Long courId;
+   // private Long enseignantId;
 }

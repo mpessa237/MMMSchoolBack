@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtService {
 
-    public static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutes
+    public static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 15 minutes
     public static final long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 30;
 
     @Value("${application.security.jwt.secret-key}")
