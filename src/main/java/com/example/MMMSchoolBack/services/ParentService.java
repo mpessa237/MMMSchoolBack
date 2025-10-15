@@ -31,6 +31,8 @@ public class ParentService {
 
         Parent parent = parentMapper.toEntity(parentReqDTO);
 
+        parent.setActive(true);
+
         List<Eleve> eleveList = new ArrayList<>();
 
         for (Long eleveId : parentReqDTO.getEleveIds()){
@@ -85,10 +87,10 @@ public class ParentService {
 
     @Transactional
     public void  softDelete(Long parentId){
-        Parent parent = parentRepo.findInactiveById(parentId)
-                .orElseThrow(()-> new NoSuchElementException("parent not found!!"));
+        Parent parent = parentRepo.findById(parentId)
+                .orElseThrow(()-> new NoSuchElementException("Parent non trouvé avec l'ID: " + parentId));
         if (!parent.isActive()){
-            return;
+            throw new IllegalStateException("Le parent est déjà inactif.");
         }
         parent.setActive(false);
         parentRepo.save(parent);
@@ -96,7 +98,7 @@ public class ParentService {
 
     @Transactional
     public void reactiveParent(Long parentId){
-        Parent parent = parentRepo.findInactiveById(parentId)
+        Parent parent = parentRepo.findById(parentId)
                 .orElseThrow(()-> new NoSuchElementException("parent not found!!"));
         if (parent.isActive()){
             throw new IllegalStateException("le parent avec ID" + parentId + "est deja active");

@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/parents")
+@CrossOrigin(origins = "http://localhost:4200", originPatterns = "http://localhost:57971")
 public class ParentController {
 
     private final ParentService parentService;
@@ -44,17 +45,16 @@ public class ParentController {
     }
 
     @DeleteMapping("/{parentId}")
-    public ResponseEntity<Void> softDelete(@PathVariable Long parentId){
+    public ResponseEntity<Void> softDeleteParent(@PathVariable Long parentId) {
         try {
-
             parentService.softDelete(parentId);
-            return ResponseEntity.notFound().build();
-        }
-        catch (NoSuchElementException e){
+            return ResponseEntity.noContent().build(); // Succès
+        } catch (NoSuchElementException e) {
+            // 🔑 Intercepte l'exception du service et renvoie 404
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalStateException e) {
+            // Intercepte l'exception "déjà inactif" et renvoie 409
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 

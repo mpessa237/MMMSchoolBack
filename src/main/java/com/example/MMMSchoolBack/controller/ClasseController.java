@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/classes")
-@CrossOrigin(origins = "http://localhost:4200") // 🔑 Autorise les requêtes depuis votre front-end Angular
+@CrossOrigin(origins = "http://localhost:4200", originPatterns = "http://localhost:57971") // 🔑 Autorise les requêtes depuis votre front-end Angular
 public class ClasseController {
 
     private final ClasseService classeService;
