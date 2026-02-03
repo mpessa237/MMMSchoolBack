@@ -19,8 +19,8 @@ public class ParentRespDTO {
     private String adresse;
     private String profession;
 
-    @JsonProperty
-    private boolean active = true;
+
+    private boolean active ;
 
     List<EleveSimpleDTO> eleves;
 }

@@ -82,22 +82,22 @@ public class ClasseService {
     //desactive une classe(soft delete)
     @Transactional
     public void softDeleteClasse(Long classeId){
-        Classe classe = classeRepo.findInactiveById(classeId)
+        Classe classe = classeRepo.findById(classeId)
                 .orElseThrow(()->new NoSuchElementException("classe active non trouvee avec ID:" + classeId));
 
         if (!classe.isActive()) {
-            return;
+            throw new IllegalStateException("la classe est deja inactive!");
         }
 
         classe.setActive(false);
-        classeRepo.save(classe);
+        classeRepo.saveAndFlush(classe);
 
     }
 
     //reactiver une classe
     @Transactional
     public void reactiveClasse(Long classeId){
-        Classe classe = classeRepo.findInactiveById(classeId)
+        Classe classe = classeRepo.findById(classeId)
                 .orElseThrow(()->new NoSuchElementException("classe desactivee non trouvee avec ID:" +classeId));
 
         if (classe.isActive()){

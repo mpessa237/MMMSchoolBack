@@ -25,6 +25,7 @@ public class Parent {
     private String profession;
     private String adresse;
 
+    @Column(nullable = false)
     private boolean active = true;
 
     // 🔑 Assurez-vous d'utiliser @PrePersist pour garantir l'état lors de la première sauvegarde

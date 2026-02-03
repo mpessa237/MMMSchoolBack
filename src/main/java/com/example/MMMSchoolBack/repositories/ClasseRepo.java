@@ -14,10 +14,5 @@ public interface ClasseRepo extends JpaRepository<Classe,Long> {
 
     Optional<Classe> findByNom(String nom);
 
-    @Query(value = "SELECT * FROM classes WHERE classe_id = :classeId",
-            nativeQuery = true) // <-- C'est l'élément clé !
-    Optional<Classe> findInactiveById(@Param("classeId") Long classeId);
 
-    @Query(value = "SELECT c FROM Classe c")
-    List<Classe> findAllIncludingInactive();
 }

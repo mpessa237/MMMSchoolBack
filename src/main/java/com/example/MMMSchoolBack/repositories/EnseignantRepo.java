@@ -12,7 +12,6 @@ import java.util.Optional;
 @Repository
 public interface EnseignantRepo extends JpaRepository<Enseignant,Long> {
 
-    Optional<Enseignant> findByNom(String nom);
 
 
     @Query(value = "SELECT * FROM enseignants WHERE enseignant_id = :enseignantId",

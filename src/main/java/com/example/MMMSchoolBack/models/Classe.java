@@ -27,6 +27,7 @@ public class Classe {
     private Cycle cycle;
 
     // pour le soft delete
+    @Column(nullable = false)
     private boolean active = true;
 
     @OneToMany(mappedBy = "classe",cascade = CascadeType.ALL,orphanRemoval = true)

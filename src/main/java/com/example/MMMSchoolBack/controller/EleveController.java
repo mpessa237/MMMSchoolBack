@@ -5,6 +5,8 @@ import com.example.MMMSchoolBack.dto.EleveRespDTO;
 import com.example.MMMSchoolBack.models.Eleve;
 import com.example.MMMSchoolBack.services.EleveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +18,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/eleves")
+@CrossOrigin(origins = "http://localhost:4200", originPatterns = "http://localhost:56107")
 public class EleveController {
 
     private final EleveService eleveService;
@@ -44,10 +47,9 @@ public class EleveController {
 
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping
-    public ResponseEntity<List<EleveRespDTO>> getAllEleves(){
-        List<EleveRespDTO> eleveRespDTOS = eleveService.getAllEleves();
-        return ResponseEntity.ok(eleveRespDTOS);
+    @GetMapping("/pagine")
+    public ResponseEntity<Page<EleveRespDTO>> getAllElevesPagine(Pageable pageable){
+       return ResponseEntity.ok(this.eleveService.getAllElevesPagine(pageable));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

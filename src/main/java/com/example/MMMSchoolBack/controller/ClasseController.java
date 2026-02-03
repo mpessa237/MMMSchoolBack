@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/classes")
-@CrossOrigin(origins = "http://localhost:4200", originPatterns = "http://localhost:57971") // 🔑 Autorise les requêtes depuis votre front-end Angular
+@CrossOrigin(origins = "http://localhost:4200", originPatterns = "http://localhost:56107") // 🔑 Autorise les requêtes depuis votre front-end Angular
 public class ClasseController {
 
     private final ClasseService classeService;
@@ -63,7 +63,7 @@ public class ClasseController {
         return ResponseEntity.ok(classeRespDTO);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{classeId}")
     public ResponseEntity<Void> softDelete(@PathVariable Long classeId){
         try {
@@ -73,12 +73,15 @@ public class ClasseController {
         catch (NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        catch (IllegalStateException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{classeId}/reactivate")
     public ResponseEntity<Void> reactivateClasse(@PathVariable Long classeId) {
         try {

@@ -12,8 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ParentRepo extends JpaRepository<Parent,Long> {
 
-    @Query(value = "SELECT * FROM parents WHERE parent_id = :parentId",
-            nativeQuery = true) // <-- C'est l'élément clé !
-    Optional<Parent> findInactiveById(@Param("parentId") Long parentId);
 
 }

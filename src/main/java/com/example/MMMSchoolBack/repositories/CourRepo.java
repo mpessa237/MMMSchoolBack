@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CourRepo extends JpaRepository<Cour,Long> {
 
-    Optional<Cour> findCourByNom(String nom);
 
     @Query(value = "SELECT * FROM cours WHERE cour_id = :courId",
     nativeQuery = true)

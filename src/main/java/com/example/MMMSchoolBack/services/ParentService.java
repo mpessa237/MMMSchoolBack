@@ -93,7 +93,7 @@ public class ParentService {
             throw new IllegalStateException("Le parent est déjà inactif.");
         }
         parent.setActive(false);
-        parentRepo.save(parent);
+        parentRepo.saveAndFlush(parent);
     }
 
     @Transactional

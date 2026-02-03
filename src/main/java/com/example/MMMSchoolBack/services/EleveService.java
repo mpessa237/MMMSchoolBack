@@ -12,6 +12,8 @@ import com.example.MMMSchoolBack.repositories.ParentRepo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 
@@ -84,13 +86,12 @@ public class EleveService {
 
     }
 
-    public List<EleveRespDTO> getAllEleves(){
+    public Page<EleveRespDTO> getAllElevesPagine(Pageable pageable){
 
-        List<Eleve> eleves = eleveRepo.findAll();
+        Page<Eleve> elevePage = eleveRepo.findAll(pageable);
 
-        return eleves.stream()
-                .map(eleveMapper::toDto)
-                .collect(Collectors.toList());
+        return elevePage.map(eleveMapper::toDto);
+
     }
 
     public Eleve updateEleve(Eleve eleve,Long eleveId){

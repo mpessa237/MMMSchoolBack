@@ -45,6 +45,7 @@ public class ClasseMapper {
                 .collect(Collectors.toList());
 
         classeRespDTO.setEleves(eleveDtos);
+        classeRespDTO.setActive(classe.isActive());
 
         return classeRespDTO;
     }
